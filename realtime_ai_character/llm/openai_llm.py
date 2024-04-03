@@ -25,7 +25,7 @@ class OpenaiLlm(LLM):
                 streaming=True,
             )
         else:
-            from langchain.chat_models import ChatOpenAI
+            from langchain_openai import ChatOpenAI
 
             self.chat_open_ai = ChatOpenAI(model=model, temperature=0.5, streaming=True)
         self.config = {"model": model, "temperature": 0.5, "streaming": True}

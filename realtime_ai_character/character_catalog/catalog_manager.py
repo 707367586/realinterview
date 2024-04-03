@@ -9,7 +9,7 @@ import yaml
 from dotenv import load_dotenv
 from firebase_admin import auth
 from langchain.text_splitter import CharacterTextSplitter
-from llama_index import SimpleDirectoryReader
+# from llama_index import SimpleDirectoryReader
 from readerwriterlock import rwlock
 
 from realtime_ai_character.database.chroma import get_chroma
@@ -99,20 +99,21 @@ class CatalogManager(Singleton):
             return character_name
 
     def load_data(self, character_name: str, data_path: Path):
-        loader = SimpleDirectoryReader(data_path.absolute().as_posix())
-        documents = loader.load_data()
-        text_splitter = CharacterTextSplitter(separator="\n", chunk_size=500, chunk_overlap=100)
-        docs = text_splitter.create_documents(
-            texts=[d.text for d in documents],
-            metadatas=[
-                {
-                    "character_name": character_name,
-                    "id": d.id_,
-                }
-                for d in documents
-            ],
-        )
-        self.db.add_documents(docs)
+        # loader = SimpleDirectoryReader(data_path.absolute().as_posix())
+        # documents = loader.load_data()
+        # text_splitter = CharacterTextSplitter(separator="\n", chunk_size=1000, chunk_overlap=100)
+        # docs = text_splitter.create_documents(
+        #     texts=[d.text for d in documents],
+        #     metadatas=[
+        #         {
+        #             "character_name": character_name,
+        #             "id": d.id_,
+        #         }
+        #         for d in documents
+        #     ],
+        # )
+        # self.db.add_documents(docs)
+        pass
 
     def load_characters(self, source: str, overwrite: bool):
         """
@@ -136,6 +137,7 @@ class CatalogManager(Singleton):
 
         for directory in directories:
             character_name = self.load_character(directory, source)
+            print(directory)
             if character_name and overwrite:
                 logger.info("Overwriting data for character: " + character_name)
                 self.load_data(character_name, directory / "data")
